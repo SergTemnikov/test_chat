@@ -1,23 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useReducer, useState} from 'react'
+import * as axios from 'axios'
+import PageLogin from './pages/page-login'
+import reducer from './reducer'
+import PreLoader from './components/common/preloader/PreLoader'
+// eslint-disable-next-line
+import socket from './service/socket'
+import './index.css'
 
-function App() {
+
+
+const App = () => {
+  
+  const [isLoading, setIsLoading] = useState(false)
+
+  const [state, dispatch] = useReducer(reducer, {
+    entered: false,
+    userName: null
+  })
+
+  const onLogin = (userName) => {
+    dispatch({type: 'ENTERED', userName})
+
+    setIsLoading(false)
+
+    socket.emit('ROOM:ENTERED', {userName})
+  }
+
+  const submitForm = async (userName) => {
+    setIsLoading(true)
+    await axios.post('/rooms', {userName})
+      .then(() => {
+        onLogin(userName)
+      })
+  }
+
+  window.socket = socket
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {
+        isLoading
+        ? <div className='preloaderWrapper'>
+            <PreLoader />
+          </div> 
+        : <div className='login'>
+            {!state.entered && <PageLogin submitForm={submitForm}/>}
+          </div>
+      }
     </div>
   );
 }
