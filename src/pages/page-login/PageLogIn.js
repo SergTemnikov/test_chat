@@ -3,20 +3,25 @@ import './PageLogin.css'
 
 const PageLogin = ({submitForm}) => {
 
+  const [roomName, setRoomName] = useState('')
   const [userName, setUserName] = useState('')
   const [userNameError, setUserNameError] = useState('')
+  const [roomNameError, setRoomNameError] = useState('')
   
 
   // Validation form function (it has return TRUE or FALSE)
   const validate = () => {
     let userError = ''
+    let roomError = ''
 
     if (!userName) userError = 'Необходимо ввести имя'
+    if (!roomName) roomError = 'Необходимо выбрать комнату'
     if (userName && userName.length < 3) userError = 'Имя должно быть не менее 3 символов'
     if (userName && userName.length >= 3) userError = ''
 
-    if (userError) {
+    if (userError || roomError) {
       setUserNameError(userError)
+      setRoomNameError(roomError)
       return false
     }
     return true
@@ -37,10 +42,17 @@ const PageLogin = ({submitForm}) => {
     event.preventDefault()
     const isValid = validate()
 
+    const authData = {
+      userName,
+      roomName
+    }
+
     if (isValid) {
-      submitForm(userName)
+      submitForm(authData)
       setUserName('')
+      setRoomName('')
       setUserNameError('')
+      setRoomNameError('')
     }
   }
 
@@ -55,6 +67,20 @@ const PageLogin = ({submitForm}) => {
 
       <div style={{ color: 'Maroon', margin: '-10px 0 15px', width: '100%' }}>
         {userNameError}
+      </div>
+
+      <select
+        name='roomName'
+        defaultValue='#'
+        onChange={e => setRoomName(e.target.value)}>
+          <option value='#' disabled>Выберите комнату</option>
+          <option value='black'>Black room</option>
+          <option value='green'>Green room</option>
+          <option value='red'>Red room</option>
+        </select>
+
+      <div style={{ color: 'Maroon', margin: '-10px 0 15px', width: '100%' }}>
+        {roomNameError}
       </div>
 
       <button type='submit'>JOIN CHAT</button>
