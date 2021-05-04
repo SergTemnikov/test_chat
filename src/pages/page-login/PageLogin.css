@@ -60,3 +60,10 @@ button:active {
   justify-content: center;
   align-items: center;
 } 
+
+.paperStyle {
+  padding: 20px; 
+  height: 400px; 
+  width: 300px;
+  margin: 50px auto;
+}

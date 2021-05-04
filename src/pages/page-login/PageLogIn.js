@@ -12,7 +12,7 @@ const PageLogin = ({submitForm, isEntered, isLoading}) => {
   const [isRoomError, setIsRoomError] = useState(false)
   const [isUserError, setIsUserError] = useState(false)
 
-  const paperStyle = {padding: 20, height: '36vh', width: 300, margin: '50px auto'}
+  const paperStyle = {padding: 20, height: 400, width: 300, margin: '50px auto'}
 
   // Validation form function (it has return TRUE or FALSE)
   const validate = () => {
@@ -45,7 +45,7 @@ const PageLogin = ({submitForm, isEntered, isLoading}) => {
 
   const roomNameHandler = (e) => {
     setRoomName(e.target.value)
-    if (!roomName) {
+    if (!e.target.value) {
       setIsRoomError(true)
     } else {
       setIsRoomError(false)
@@ -104,7 +104,7 @@ const PageLogin = ({submitForm, isEntered, isLoading}) => {
               fullWidth
               required
               variant="outlined"
-              error={isRoomError && false}
+              error={isRoomError}
               onChange={e => roomNameHandler(e)}>
   
               <MenuItem value='black'>Black</MenuItem>

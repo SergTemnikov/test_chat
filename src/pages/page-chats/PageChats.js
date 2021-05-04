@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import socket from '../../service/socket'
-import './PageChats.css'
 import {Button, Grid, Paper, TextField, List, ListItem, ListItemText} from '@material-ui/core'
 
 const PageChats = ({users, messages, userName, roomName, onAddMessage}) => {
 
+  let isSentByCurrentUser = false
+
   const [messageText, setMessageText] = useState('')
+
+  const messagesRef = useRef(null)
+
 
   let today = new Date();
   let date = today.getDate()+'.'+(today.getMonth()+1)+'.'+today.getFullYear();
@@ -26,7 +30,15 @@ const PageChats = ({users, messages, userName, roomName, onAddMessage}) => {
     return !users.length ? '0' : users.length
   }
 
-  const paperStyle = {width: 900, margin: '50px auto', height: '70vh'}
+  useEffect(() => {
+    messagesRef.current.scrollTo(0, 100000)
+  }, [messages])
+
+  const paperStyle = {
+    width: 900, 
+    margin: '50px auto', 
+    height: '70vh'
+  }
 
   const chatStyle = {
     display: 'flex',
@@ -43,20 +55,38 @@ const PageChats = ({users, messages, userName, roomName, onAddMessage}) => {
   const messagesWrapper = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'flex-end',
     height: 422, 
     overflow: 'auto', 
     padding: 10, 
     marginBottom: 15
   }
 
-  const msgStyle = {
+  const myMsgStyle = {
+    alignSelf: 'flex-start',
     maxWidth: 300,
     backgroundColor: '#673ab7',
     padding: 15,
     color: 'white',
     borderRadius: '10px',
     marginBottom: 10
+  }
+
+  const otherUserMsgStyle = {
+    alignSelf: 'flex-end',
+    maxWidth: 300,
+    backgroundColor: '#673ab7',
+    padding: 15,
+    color: 'white',
+    borderRadius: '10px',
+    marginBottom: 10
+  }
+
+  const sentTimeTextStyle = {
+    fontSize: 12, 
+    paddingTop: 10, 
+    margin: 0, 
+    textAlign: 'right'
   }
 
   return (
@@ -87,13 +117,18 @@ const PageChats = ({users, messages, userName, roomName, onAddMessage}) => {
             </Grid>
             <Grid>
               <Paper elevation={10} style={messagesArea}>
-                <Grid style={messagesWrapper}>
+                <Grid ref={messagesRef} style={messagesWrapper}>
                   { messages.map(msg => {
                       return (
-                        <div style={msgStyle}>
-                            {msg.text}
-                            <p style={{fontSize: 12, paddingTop: 10, margin: 0, textAlign: 'right'}}>{msg.userName}, {dateTime}</p>
-                        </div>
+                        isSentByCurrentUser
+                        ? <div style={myMsgStyle}>
+                              {msg.text}
+                              <p style={sentTimeTextStyle}>{msg.userName}, {dateTime}</p>
+                          </div>
+                        : <div style={otherUserMsgStyle}>
+                              {msg.text}
+                              <p style={sentTimeTextStyle}>{msg.userName}, {dateTime}</p>
+                          </div>
                       )
                     })
                   }
@@ -113,7 +148,6 @@ const PageChats = ({users, messages, userName, roomName, onAddMessage}) => {
               </Paper>
             </Grid>
           </Grid>
-        
         </Grid>
       </Paper>
     </Grid>
