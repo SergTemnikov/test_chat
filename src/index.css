@@ -11,27 +11,24 @@ body {
   box-sizing: border-box;
 }
 
+/* .app {
+  
+  background-color: #1769aa;
+
+} */
 html {
-  background-color: #687980;
+  background-color: #1769aa;;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+  font-family: 'Roboto', sans-serif;
+} 
 
-.login {
-  width: 100vw;
-  height: 70vh;
+/* .login {
+  width: 50%;
+  height: 50%;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.preloaderWrapper {
-  width: 100vw;
-  height: 90vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+} */
